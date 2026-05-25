@@ -6,7 +6,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php require_once 'init.php'; ?>
-    
+    <?php
+        require_once 'init.php';
+        $invoices = array_filter($invoices ?? [], function($n) {
+            return $n["status"] == "draft"; 
+        });
+        require_once 'invoice-list.php';
+    ?>
 </body>
 </html>

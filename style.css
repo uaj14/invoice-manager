@@ -53,10 +53,57 @@ body {
 }
 
 /* Invoice */
-.invoice{
+.invoice {
     display: flex;
+    justify-content: center;
+    /* align-items: baseline; */
+
+    background-color: #fff;
     padding: 1rem;
-    border: 1px solid gray;
+    margin: 1rem 10%;
+    /* border: 1px solid gray; */
+
+    box-shadow: 5px 5px 10px darkgray;
+}
+
+.invoice_item {
+    width: 25%;
+    padding: 5px;
+}
+
+.invoice_number {
+    font-weight: 900;
+}
+
+.invoice_client {
+    color: #3498db;
+    font-weight: 700;
+}
+
+.invoice_amount {
+
+}
+
+.invoice_status {
+    text-align: center;
+    border-width: 1px;
+    border-radius: 10px;
+    border-style: solid;
+}
+
+.invoice_status_draft{
+    background-color: lightgray;
+    border-color: darkgray;
+}
+
+.invoice_status_pending{
+    background-color: lightyellow;
+    border-color: gold;
+}
+
+.invoice_status_paid{
+    background-color: lightgreen;
+    border-color: darkgreen;
 }
 
 

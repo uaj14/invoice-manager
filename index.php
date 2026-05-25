@@ -8,6 +8,6 @@
 </head>
 <body>
     <?php require_once 'init.php'; ?>
-    
+    <?php require_once 'invoice-list.php'; ?>
 </body>
 </html>
