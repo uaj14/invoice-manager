@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php require_once 'init.php'; ?>
-    <?php require_once 'invoice-list.php'; ?>
+    <?php
+        require_once 'data.php';
+        require_once 'nav.php';
+        renderNav($invoices);
+        require_once 'invoice-list.php';
+    ?>
 </body>
 </html>

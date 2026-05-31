@@ -7,10 +7,12 @@
 </head>
 <body>
     <?php
-        require_once 'init.php';
+        require_once 'data.php';
         $invoices = array_filter($invoices ?? [], function($n) {
             return $n["status"] == "pending"; 
         });
+        require_once 'nav.php';
+        renderNav($invoices);
         require_once 'invoice-list.php';
     ?>
 </body>
