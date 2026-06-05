@@ -10,7 +10,17 @@
     <?php
         require_once 'data.php';
         require_once 'nav.php';
-        renderNav($invoices);
+
+        $selectedStatus = $_GET['status'] ?? 'all';
+        if (!in_array($selectedStatus, $statuses, true)) {
+            $selectedStatus = 'all';
+        }
+
+        $invoices = $selectedStatus === 'all'
+            ? $invoices
+            : array_filter($invoices ?? [], fn($invoice) => $invoice['status'] === $selectedStatus);
+
+        renderNav($invoices, $selectedStatus);
         require_once 'invoice-list.php';
     ?>
 </body>
