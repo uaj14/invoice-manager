@@ -89,10 +89,6 @@ body {
     font-weight: 700;
 }
 
-.invoice_amount {
-
-}
-
 .invoice_status {
     text-align: center;
     border-width: 1px;
@@ -113,6 +109,27 @@ body {
 .invoice_status_paid{
     background-color: lightgreen;
     border-color: darkgreen;
+}
+
+/* Add Form */
+.add {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #fff;
+    padding: 1rem;
+    margin: 1rem 10%;
+    /* border: 1px solid gray; */
+
+    box-shadow: 5px 5px 10px darkgray;
+}
+
+.add input, .add select {
+    height: 2rem;
+    padding: .5rem;
+    margin-bottom: 1rem;
 }
 
 

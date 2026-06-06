@@ -8,6 +8,7 @@ function renderNav($invoices, $currentStatus = 'all') { ?>
             <li><a href="index.php?status=draft" class="nav-link<?php echo $currentStatus === 'draft' ? ' active' : ''; ?>">Draft</a></li>
             <li><a href="index.php?status=pending" class="nav-link<?php echo $currentStatus === 'pending' ? ' active' : ''; ?>">Pending</a></li>
             <li><a href="index.php?status=paid" class="nav-link<?php echo $currentStatus === 'paid' ? ' active' : ''; ?>">Paid</a></li>
+            <li><a href="add.php" class="nav-link">Add</a></li>
         </ul>
     </nav>
 <?php }
