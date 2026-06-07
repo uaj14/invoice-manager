@@ -1,4 +1,5 @@
-<?php foreach (($invoices ?? []) as $invoice): ?>
+<?php
+foreach (($filteredInvoices ?? []) as $invoice): ?>
     <div class="invoice">
         <div class="invoice_item invoice_number"><?php echo $invoice["number"] ?></div>
         <div class="invoice_item invoice_client"><a href="<?php echo $invoice["email"] ?>"><?php echo $invoice["client"] ?></a></div>

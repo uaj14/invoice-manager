@@ -8,8 +8,12 @@
 <body>
     <?php
         require_once 'data.php';
+        session_start();
+        if (!isset($_SESSION["all_invoices"])) {
+            $_SESSION["all_invoices"] = $invoices;
+        }
         require_once 'nav.php';
-        renderNav($invoices, 'all');
+        renderNav('none');
 
         function getInvoiceNumber ($length = 5) {
           $letters = range('A', 'Z');
