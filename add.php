@@ -29,32 +29,31 @@
         $invoiceNumber = getInvoiceNumber();
     ?>
 
-    <div class="add">
+
+        
+
+    <form class="add" action="index.php" method="post" class="invoice-form">
         <h1>Add Invoice</h1>
+        <input type="hidden" name="number" value="<?php echo $invoiceNumber; ?>">
 
-        <form class="add" action="index.php" method="post" class="invoice-form">
-            <label>Invoice Number</label>
-            <div class="invoice-number"><?php echo $invoiceNumber; ?></div>
-            <input type="hidden" name="number" value="<?php echo $invoiceNumber; ?>">
+        <label for="client">Client Name</label>
+        <input id="client" name="client" type="text" required>
 
-            <label for="client">Client Name</label>
-            <input id="client" name="client" type="text" required>
+        <label for="email">Client Email</label>
+        <input id="email" name="email" type="email" required>
 
-            <label for="email">Client Email</label>
-            <input id="email" name="email" type="email" required>
+        <label for="amount">Amount</label>
+        <input id="amount" name="amount" type="number" step="0.01" min="0" required>
 
-            <label for="amount">Amount</label>
-            <input id="amount" name="amount" type="number" step="0.01" min="0" required>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="draft">Draft</option>
+            <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
+        </select>
 
-            <label for="status">Status</label>
-            <select id="status" name="status" required>
-                <option value="draft">Draft</option>
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
-            </select>
+        <button type="submit" class="nav-link">Submit Invoice</button>
+    </form>
 
-            <button type="submit">Submit Invoice</button>
-        </form>
-    </main>
 </body>
 </html>

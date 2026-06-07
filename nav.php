@@ -21,7 +21,7 @@ function renderNav($currentStatus = 'all', $count = null) {
             <li><a href="index.php?status=draft" class="nav-link<?php echo $currentStatus === 'draft' ? ' active' : ''; ?>">Draft</a></li>
             <li><a href="index.php?status=pending" class="nav-link<?php echo $currentStatus === 'pending' ? ' active' : ''; ?>">Pending</a></li>
             <li><a href="index.php?status=paid" class="nav-link<?php echo $currentStatus === 'paid' ? ' active' : ''; ?>">Paid</a></li>
-            <li><a href="add.php" class="nav-link">Add</a></li>
+            <li><a href="add.php" class="nav-link<?php echo strpos($_SERVER['PHP_SELF'], 'add.php') !== false ? ' active' : ''; ?>">Add</a></li>
         </ul>
     </nav>
 <?php }

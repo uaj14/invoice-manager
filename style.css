@@ -12,6 +12,10 @@ body {
     background-color: #f4f4f4;
 }
 
+button {
+    background-color: #34495e;
+}
+
 /* Navigation Bar Styles */
 .navbar {
     display: flex;
@@ -56,9 +60,10 @@ body {
     color: #fff;
 }
 
-.nav-link:active {
+.nav-link.active {
     background-color: #3498db;
     color: #fff;
+    font-weight: 700;
 }
 
 /* Invoice */
