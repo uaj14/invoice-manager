@@ -37,6 +37,8 @@
                     break;
                 case 'update':
                 case 'delete':
+                    // `$key => invoice` is necessary to access the data from $_SESSION directly,
+                    // not just retrieving the value.
                     foreach ($_SESSION['all_invoices'] as $key => $invoice) {
                         if ($invoice['number'] === $_POST['number']) {
                             if ($_POST['post_type'] === 'update') {
@@ -45,6 +47,7 @@
                                 $_SESSION['all_invoices'][$key]['client'] = $_POST['client'] ?? $invoice['client'];
                                 $_SESSION['all_invoices'][$key]['email'] = $_POST['email'] ?? $invoice['email'];
                             } else {
+                                $TEST = "DELETE ELSE";
                                 unset($_SESSION['all_invoices'][$key]);
                                 $_SESSION['all_invoices'] = array_values($_SESSION['all_invoices']);
                             }
@@ -54,7 +57,7 @@
                     break;
             }
         }
-        ?><!--<h1>TEST: <?php //echo $TEST ?></h1>--><?php
+        ?><h1>TEST: <?php echo $TEST ?></h1><?php
 
         // Query String
         $selectedStatus = $_GET['status'] ?? 'all';

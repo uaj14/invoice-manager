@@ -24,6 +24,7 @@ foreach (($filteredInvoices ?? []) as $invoice): ?>
 
         <a href="update.php?number=<?php echo $invoice["number"] ?>" id="edit_button" class="invoice_button">Edit</a>
         <form method="post">
+            <input type="hidden" name="post_type" value="delete">
             <input 
                 type="hidden" 
                 name="number" 
