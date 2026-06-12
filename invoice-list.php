@@ -18,5 +18,19 @@ foreach (($filteredInvoices ?? []) as $invoice): ?>
             }
 
         ?>"><?php echo $invoice["status"] ?></div>
+
+        <!-- <div class=""><button class="">Edit</button></div>
+        <div class=""><button class="">Delete</button></div> -->
+
+        <a href="update.php?number=<?php echo $invoice["number"] ?>" id="edit_button" class="invoice_button">Edit</a>
+        <form method="post">
+            <input 
+                type="hidden" 
+                name="number" 
+                value="<?php echo $invoice["number"] ?>">
+            <button id="delete_button" class="invoice_button">Delete</button>
+        </form>
+        
+
     </div>
 <?php endforeach; ?>

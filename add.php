@@ -34,6 +34,7 @@
 
     <form class="add" action="index.php" method="post" class="invoice-form">
         <h1>Add Invoice</h1>
+        <input type="hidden" name="post_type" value="add">
         <input type="hidden" name="number" value="<?php echo $invoiceNumber; ?>">
 
         <label for="client">Client Name</label>

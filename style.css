@@ -81,7 +81,7 @@ button {
 }
 
 .invoice_item {
-    width: 25%;
+    width: 100%;
     padding: 5px;
 }
 
@@ -96,6 +96,7 @@ button {
 
 .invoice_status {
     text-align: center;
+    margin: 0 1rem;
     border-width: 1px;
     border-radius: 10px;
     border-style: solid;
@@ -114,6 +115,35 @@ button {
 .invoice_status_paid{
     background-color: lightgreen;
     border-color: darkgreen;
+}
+
+.invoice_button  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+
+    padding: 0 1rem;
+    margin: 0 .5rem;
+
+    border-width: 1px;
+    border-radius: 10px;
+    border-style: solid;
+}
+
+#edit_button {
+    color: black;
+    background-color: lightgray;
+    font-weight: 700;
+}
+
+#delete_button {
+    color: white;
+    background-color: red;
+    font-weight: 700;
 }
 
 /* Add Form */
