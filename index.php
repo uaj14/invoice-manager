@@ -17,47 +17,19 @@
         }
         require_once 'nav.php';
 
-        $TEST = "";
-
         // POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_type'], $_POST['number'])) {
-            switch ($_POST['post_type']) {
-                case 'add':
-                    $newInvoice = [
-                        'number' => $_POST['number'] ?? '',
-                        'amount' => isset($_POST['amount']) ? (float) $_POST['amount'] : 0,
-                        'status' => $_POST['status'] ?? 'draft',
-                        'client' => $_POST['client'] ?? '',
-                        'email' => $_POST['email'] ?? '',
-                    ];
-
-                    if ($newInvoice['number'] && $newInvoice['client'] && $newInvoice['email']) {
-                        array_push($_SESSION['all_invoices'], $newInvoice);
+            if ($_POST['post_type'] === 'delete') {
+                $searchNumber = trim($_POST['number'] ?? '');
+                foreach ($_SESSION['all_invoices'] as $key => $invoice) {
+                    if ($invoice['number'] === $searchNumber) {
+                        unset($_SESSION['all_invoices'][$key]);
+                        $_SESSION['all_invoices'] = array_values($_SESSION['all_invoices']);
+                        break;
                     }
-                    break;
-                case 'update':
-                case 'delete':
-                    // `$key => invoice` is necessary to access the data from $_SESSION directly,
-                    // not just retrieving the value.
-                    foreach ($_SESSION['all_invoices'] as $key => $invoice) {
-                        if ($invoice['number'] === $_POST['number']) {
-                            if ($_POST['post_type'] === 'update') {
-                                $_SESSION['all_invoices'][$key]['amount'] = isset($_POST['amount']) ? (float) $_POST['amount'] : 0;
-                                $_SESSION['all_invoices'][$key]['status'] = $_POST['status'] ?? $invoice['status'];
-                                $_SESSION['all_invoices'][$key]['client'] = $_POST['client'] ?? $invoice['client'];
-                                $_SESSION['all_invoices'][$key]['email'] = $_POST['email'] ?? $invoice['email'];
-                            } else {
-                                $TEST = "DELETE ELSE";
-                                unset($_SESSION['all_invoices'][$key]);
-                                $_SESSION['all_invoices'] = array_values($_SESSION['all_invoices']);
-                            }
-                            break;
-                        }
-                    }
-                    break;
+                }
             }
         }
-        ?><h1>TEST: <?php echo $TEST ?></h1><?php
 
         // Query String
         $selectedStatus = $_GET['status'] ?? 'all';

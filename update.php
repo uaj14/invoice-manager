@@ -8,6 +8,7 @@
 <body>
     <?php
         require_once 'data.php';
+        require_once 'validate.php';
         session_start();
         if (!isset($_SESSION["all_invoices"])) {
             $_SESSION["all_invoices"] = $invoices;
@@ -15,41 +16,102 @@
         require_once 'nav.php';
         renderNav('none');
 
-        // Get data associated with the invoice number
-        if (isset($_GET['number'])) {
-            
-            $invoiceNumber = $_GET['number'];
+        $selectedInvoice = null;
+        $invoiceNumber = null;
+        $error = null;
+        $errors = [];
+        $old = ['client' => '', 'email' => '', 'amount' => '', 'status' => 'draft'];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['post_type'] ?? '') === 'update') {
+            $invoiceNumber = trim($_POST['number'] ?? '');
+            if ($invoiceNumber === '') {
+                $error = "Invalid invoice number.";
+            } else {
+                $result = validateInvoiceData($_POST, 'update');
+                if ($result['valid']) {
+                    foreach ($_SESSION['all_invoices'] as $key => $invoice) {
+                        if ($invoice['number'] === $invoiceNumber) {
+                            $_SESSION['all_invoices'][$key] = array_merge($_SESSION['all_invoices'][$key], $result['data']);
+                            break;
+                        }
+                    }
+                    header('Location: index.php');
+                    exit;
+                }
+
+                $errors = $result['errors'];
+                $old['client'] = htmlspecialchars($_POST['client'] ?? '', ENT_QUOTES, 'UTF-8');
+                $old['email'] = htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8');
+                $old['amount'] = htmlspecialchars($_POST['amount'] ?? '', ENT_QUOTES, 'UTF-8');
+                $old['status'] = $_POST['status'] ?? 'draft';
+            }
+        }
+
+        if ($invoiceNumber === null && isset($_GET['number']) && !empty(trim($_GET['number']))) {
+            $invoiceNumber = trim($_GET['number']);
+        }
+
+        if ($invoiceNumber !== null && $error === null) {
             $allInvoices = $_SESSION["all_invoices"];
-            $selectedInvoice = array_filter($allInvoices, function ($invoice) use ($invoiceNumber) {
+            $filtered = array_filter($allInvoices, function ($invoice) use ($invoiceNumber) {
                 return $invoice["number"] === $invoiceNumber;
             });
-            $selectedInvoice = reset($selectedInvoice);
+            $selectedInvoice = reset($filtered);
+            if (!$selectedInvoice) {
+                $error = "Invoice not found.";
+            }
+        }
+
+        if ($selectedInvoice && empty($errors)) {
+            $old['client'] = htmlspecialchars($selectedInvoice["client"], ENT_QUOTES, 'UTF-8');
+            $old['email'] = htmlspecialchars($selectedInvoice["email"], ENT_QUOTES, 'UTF-8');
+            $old['amount'] = htmlspecialchars($selectedInvoice["amount"], ENT_QUOTES, 'UTF-8');
+            $old['status'] = $selectedInvoice["status"];
         }
     ?>
-    <h1> <?php echo $invoiceNumber ?></h1>
-    <form class="add" action="index.php" method="post" class="invoice-form">
+    
+    <?php if ($error): ?>
+        <div class="error-message" style="color: red; padding: 1rem; margin: 1rem 10%; background-color: #ffcccc; border-radius: 4px;">
+            <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+        <p style="text-align: center; margin-top: 2rem;">
+            <a href="index.php" class="nav-link" style="display: inline-block; padding: 0.5rem 1rem; background-color: #34495e; color: white; text-decoration: none; border-radius: 4px;">Back to Invoices</a>
+        </p>
+    <?php else: ?>
+    <h1><?php echo htmlspecialchars($invoiceNumber, ENT_QUOTES, 'UTF-8'); ?></h1>
+    <?php if (!empty($errors)): ?>
+        <div class="error-message" style="color: #b00020; background:#ffdede; padding:8px; margin:1rem 10%; border-radius:6px;">
+            <ul style="margin:0 0 0.5rem 1.25rem;">
+                <?php foreach ($errors as $err): ?>
+                    <li><?php echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8'); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+    <form class="add invoice-form" action="" method="post">
         <h1>Update Invoice</h1>
         <input type="hidden" name="post_type" value="update">
-        <input type="hidden" name="number" value="<?php echo $invoiceNumber; ?>">
+        <input type="hidden" name="number" value="<?php echo htmlspecialchars($invoiceNumber, ENT_QUOTES, 'UTF-8'); ?>">
 
         <label for="client">Client Name</label>
-        <input id="client" name="client" type="text" value="<?php echo $selectedInvoice["client"]; ?>" required>
+        <input id="client" name="client" type="text" value="<?php echo $old['client']; ?>" required>
 
         <label for="email">Client Email</label>
-        <input id="email" name="email" type="email" value="<?php echo $selectedInvoice["email"]; ?>" required>
+        <input id="email" name="email" type="email" value="<?php echo $old['email']; ?>" required>
 
         <label for="amount">Amount</label>
-        <input id="amount" name="amount" type="number" step="0.01" min="0" value="<?php echo $selectedInvoice["amount"]; ?>" required>
+        <input id="amount" name="amount" type="number" step="1" min="1" value="<?php echo $old['amount']; ?>" required>
 
         <label for="status">Status</label>
         <select id="status" name="status" required>
-            <option value="draft" <?php if ($selectedInvoice["status"] === "draft") echo "selected"; ?>>Draft</option>
-            <option value="pending" <?php if ($selectedInvoice["status"] === "pending") echo "selected"; ?>>Pending</option>
-            <option value="paid" <?php if ($selectedInvoice["status"] === "paid") echo "selected"; ?>>Paid</option>
+            <option value="draft" <?php echo $old['status'] === 'draft' ? 'selected' : ''; ?>>Draft</option>
+            <option value="pending" <?php echo $old['status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
+            <option value="paid" <?php echo $old['status'] === 'paid' ? 'selected' : ''; ?>>Paid</option>
         </select>
 
         <button type="submit" class="nav-link">Update Invoice</button>
     </form>
+    <?php endif; ?>
 
 </body>
 </html>
