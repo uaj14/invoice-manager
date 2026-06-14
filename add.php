@@ -16,7 +16,7 @@
         require_once 'nav.php';
         renderNav('none');
 
-        // Generate invoice number helper
+        // Generate invoice number helper.
         function getInvoiceNumber ($length = 5) {
             $letters = range('A', 'Z');
             $number = [];
@@ -28,7 +28,7 @@
             return implode($number);
         }
 
-        // Prepare defaults and handle POST submit on this page (minimal changes)
+        // Prepare defaults and handle POST submit on this page.
         $errors = [];
         $old = ['client' => '', 'email' => '', 'amount' => '', 'status' => 'draft'];
         $invoiceNumber = getInvoiceNumber();
@@ -36,9 +36,10 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['post_type'] ?? '') === 'add') {
             $result = validateInvoiceData($_POST, 'add');
             if ($result['valid']) {
-                    // Insert validated data into session and redirect to list
+                    // Insert validated data into session and redirect to filtered list
                     array_push($_SESSION['all_invoices'], $result['data']);
-                    header('Location: index.php');
+                    $status = rawurlencode($result['data']['status'] ?? 'all');
+                    header("Location: index.php?status={$status}");
                     exit;
             }
             // preserve entered values and show errors
@@ -53,9 +54,6 @@
             }
         }
     ?>
-
-
-        
 
     <?php if (!empty($errors)): ?>
         <div class="error-message" style="color: #b00020; background:#ffdede; padding:8px; margin:1rem 10%; border-radius:6px;">

@@ -1,8 +1,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Manager - All Invoices</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,7 +16,7 @@
         }
         require_once 'nav.php';
 
-        // POST
+        // POST: Deleting an invoice
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_type'], $_POST['number'])) {
             if ($_POST['post_type'] === 'delete') {
                 $searchNumber = trim($_POST['number'] ?? '');
@@ -31,7 +30,7 @@
             }
         }
 
-        // Query String
+        // Query String to filter invoice by status.
         $selectedStatus = $_GET['status'] ?? 'all';
         if (!in_array($selectedStatus, $statuses, true)) {
             $selectedStatus = 'all';

@@ -35,7 +35,8 @@
                             break;
                         }
                     }
-                    header('Location: index.php');
+                    $status = rawurlencode($result['data']['status'] ?? 'all');
+                    header("Location: index.php?status={$status}");
                     exit;
                 }
 
