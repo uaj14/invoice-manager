@@ -7,39 +7,24 @@
 </head>
 <body>
     <?php
-        require_once 'data.php';
-
-        // Initialize session all invoices
-        session_start();
-        if (!isset($_SESSION["all_invoices"])) {
-            $_SESSION["all_invoices"] = $invoices;
-        }
+        require_once 'db.php';
         require_once 'nav.php';
 
         // POST: Deleting an invoice
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_type'], $_POST['number'])) {
-            if ($_POST['post_type'] === 'delete') {
-                $searchNumber = trim($_POST['number'] ?? '');
-                foreach ($_SESSION['all_invoices'] as $key => $invoice) {
-                    if ($invoice['number'] === $searchNumber) {
-                        unset($_SESSION['all_invoices'][$key]);
-                        $_SESSION['all_invoices'] = array_values($_SESSION['all_invoices']);
-                        break;
-                    }
-                }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_type'], $_POST['number']) && $_POST['post_type'] === 'delete') {
+            $searchNumber = trim($_POST['number'] ?? '');
+            if ($searchNumber !== '') {
+                deleteInvoice($searchNumber);
             }
         }
 
-        // Query String to filter invoice by status.
         $selectedStatus = $_GET['status'] ?? 'all';
+        $statuses = getAllStatusesWithAll();
         if (!in_array($selectedStatus, $statuses, true)) {
             $selectedStatus = 'all';
         }
 
-        // Set a list of invoices that is filtered from the master list of invoices from $_SESSION
-        $filteredInvoices = $selectedStatus === 'all'
-            ? $_SESSION["all_invoices"]
-            : array_filter($_SESSION["all_invoices"] ?? [], fn($invoice) => $invoice['status'] === $selectedStatus);
+        $filteredInvoices = getInvoices($selectedStatus);
 
         renderNav($selectedStatus);
         require_once 'invoice-list.php';

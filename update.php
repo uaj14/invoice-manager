@@ -7,12 +7,8 @@
 </head>
 <body>
     <?php
-        require_once 'data.php';
+        require_once 'db.php';
         require_once 'validate.php';
-        session_start();
-        if (!isset($_SESSION["all_invoices"])) {
-            $_SESSION["all_invoices"] = $invoices;
-        }
         require_once 'nav.php';
         renderNav('none');
 
@@ -29,12 +25,7 @@
             } else {
                 $result = validateInvoiceData($_POST, 'update');
                 if ($result['valid']) {
-                    foreach ($_SESSION['all_invoices'] as $key => $invoice) {
-                        if ($invoice['number'] === $invoiceNumber) {
-                            $_SESSION['all_invoices'][$key] = array_merge($_SESSION['all_invoices'][$key], $result['data']);
-                            break;
-                        }
-                    }
+                    updateInvoice($invoiceNumber, $result['data']);
                     $status = rawurlencode($result['data']['status'] ?? 'all');
                     header("Location: index.php?status={$status}");
                     exit;
@@ -53,11 +44,7 @@
         }
 
         if ($invoiceNumber !== null && $error === null) {
-            $allInvoices = $_SESSION["all_invoices"];
-            $filtered = array_filter($allInvoices, function ($invoice) use ($invoiceNumber) {
-                return $invoice["number"] === $invoiceNumber;
-            });
-            $selectedInvoice = reset($filtered);
+            $selectedInvoice = getInvoiceByNumber($invoiceNumber);
             if (!$selectedInvoice) {
                 $error = "Invoice not found.";
             }

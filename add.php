@@ -7,12 +7,8 @@
 </head>
 <body>
     <?php
-        require_once 'data.php';
+        require_once 'db.php';
         require_once 'validate.php';
-        session_start();
-        if (!isset($_SESSION["all_invoices"])) {
-            $_SESSION["all_invoices"] = $invoices;
-        }
         require_once 'nav.php';
         renderNav('none');
 
@@ -36,21 +32,19 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['post_type'] ?? '') === 'add') {
             $result = validateInvoiceData($_POST, 'add');
             if ($result['valid']) {
-                    // Insert validated data into session and redirect to filtered list
-                    array_push($_SESSION['all_invoices'], $result['data']);
-                    $status = rawurlencode($result['data']['status'] ?? 'all');
-                    header("Location: index.php?status={$status}");
-                    exit;
+                addInvoice($result['data']);
+                $status = rawurlencode($result['data']['status'] ?? 'all');
+                header("Location: index.php?status={$status}");
+                exit;
             }
-            // preserve entered values and show errors
+
             $errors = $result['errors'];
             $old['client'] = htmlspecialchars($_POST['client'] ?? '', ENT_QUOTES, 'UTF-8');
             $old['email'] = htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8');
             $old['amount'] = htmlspecialchars($_POST['amount'] ?? '', ENT_QUOTES, 'UTF-8');
             $old['status'] = $_POST['status'] ?? 'draft';
-            // keep the invoice number the user submitted if provided
             if (!empty($_POST['number'])) {
-                    $invoiceNumber = htmlspecialchars($_POST['number'], ENT_QUOTES, 'UTF-8');
+                $invoiceNumber = htmlspecialchars($_POST['number'], ENT_QUOTES, 'UTF-8');
             }
         }
     ?>

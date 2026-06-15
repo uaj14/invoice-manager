@@ -1,9 +1,9 @@
 <?php
 foreach (($filteredInvoices ?? []) as $invoice): ?>
     <div class="invoice">
-        <div class="invoice_item invoice_number"><?php echo $invoice["number"] ?></div>
-        <div class="invoice_item invoice_client"><a href="<?php echo $invoice["email"] ?>"><?php echo $invoice["client"] ?></a></div>
-        <div class="invoice_item invoice_amount">$ <?php echo $invoice["amount"] ?></div>
+        <div class="invoice_item invoice_number"><?php echo htmlspecialchars($invoice["number"], ENT_QUOTES, 'UTF-8') ?></div>
+        <div class="invoice_item invoice_client"><a href="mailto:<?php echo htmlspecialchars($invoice["email"], ENT_QUOTES, 'UTF-8') ?>"><?php echo htmlspecialchars($invoice["client"], ENT_QUOTES, 'UTF-8') ?></a></div>
+        <div class="invoice_item invoice_amount">$ <?php echo htmlspecialchars($invoice["amount"], ENT_QUOTES, 'UTF-8') ?></div>
         <div class="invoice_item invoice_status <?php 
             switch ($invoice["status"]){
                 case "draft":
@@ -17,7 +17,7 @@ foreach (($filteredInvoices ?? []) as $invoice): ?>
                     break;
             }
 
-        ?>"><?php echo $invoice["status"] ?></div>
+        ?>"><?php echo htmlspecialchars($invoice["status"], ENT_QUOTES, 'UTF-8') ?></div>
 
         <a href="update.php?number=<?php echo $invoice["number"] ?>" id="edit_button" class="invoice_button">Edit</a>
         <form method="post">
