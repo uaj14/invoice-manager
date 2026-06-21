@@ -66,7 +66,6 @@
             <a href="index.php" class="nav-link" style="display: inline-block; padding: 0.5rem 1rem; background-color: #34495e; color: white; text-decoration: none; border-radius: 4px;">Back to Invoices</a>
         </p>
     <?php else: ?>
-    <h1><?php echo htmlspecialchars($invoiceNumber, ENT_QUOTES, 'UTF-8'); ?></h1>
     <?php if (!empty($errors)): ?>
         <div class="error-message" style="color: #b00020; background:#ffdede; padding:8px; margin:1rem 10%; border-radius:6px;">
             <ul style="margin:0 0 0.5rem 1.25rem;">
