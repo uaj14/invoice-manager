@@ -67,7 +67,7 @@
             <a href="index.php" class="nav-link" style="display: inline-block; padding: 0.5rem 1rem; background-color: #34495e; color: white; text-decoration: none; border-radius: 4px;">Back to Invoices</a>
         </p>
     <?php else: ?>
-        <?php include 'invoice-form.php'; ?>
+        <?php require_once 'invoice-form.php'; ?>
     <?php endif; ?>
 
 </body>

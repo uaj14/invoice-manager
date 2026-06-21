@@ -50,7 +50,7 @@
         }
     ?>
 
-    <?php include 'invoice-form.php'; ?>
+    <?php require_once 'invoice-form.php'; ?>
 
 </body>
 </html>
