@@ -33,13 +33,19 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['post_type'] ?? '') === 'add') {
             $result = validateInvoiceData($_POST, 'add');
             if ($result['valid']) {
-                addInvoice($result['data']);
-                $status = rawurlencode($result['data']['status'] ?? 'all');
-                header("Location: index.php?status={$status}");
-                exit;
+                $file = $_FILES['document'] ?? ['error' => UPLOAD_ERR_NO_FILE];
+                if (saveInvoiceDocument($result['data']['number'], $file, $errors) && addInvoice($result['data'])) {
+                    $status = rawurlencode($result['data']['status'] ?? 'all');
+                    header("Location: index.php?status={$status}");
+                    exit;
+                }
+
+                if (!empty($result['data']['number'])) {
+                    deleteInvoiceDocument($result['data']['number']);
+                }
             }
 
-            $errors = $result['errors'];
+            $errors = array_merge($errors, $result['errors']);
             $old['client'] = htmlspecialchars($_POST['client'] ?? '', ENT_QUOTES, 'UTF-8');
             $old['email'] = htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8');
             $old['amount'] = htmlspecialchars($_POST['amount'] ?? '', ENT_QUOTES, 'UTF-8');

@@ -41,7 +41,7 @@ $postType = $isUpdate ? 'update' : 'add';
     </div>
 <?php endif; ?>
 
-<form class="add invoice-form" action="" method="post">
+<form class="add invoice-form" action="" method="post" enctype="multipart/form-data">
     <h1><?php echo $headingText; ?></h1>
     <input type="hidden" name="post_type" value="<?php echo $postType; ?>">
     <input type="hidden" name="number" value="<?php echo htmlspecialchars($invoiceNumber, ENT_QUOTES, 'UTF-8'); ?>">
@@ -61,6 +61,9 @@ $postType = $isUpdate ? 'update' : 'add';
         <option value="pending" <?php echo $old['status'] === 'pending' ? 'selected' : ''; ?>>Pending</option>
         <option value="paid" <?php echo $old['status'] === 'paid' ? 'selected' : ''; ?>>Paid</option>
     </select>
+
+    <label for="document">Upload PDF</label>
+    <input id="document" name="document" type="file" accept="application/pdf">
 
     <button type="submit" class="nav-link"><?php echo $buttonText; ?></button>
 </form>

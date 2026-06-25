@@ -71,8 +71,101 @@ function updateInvoice(string $number, array $invoice): bool {
 }
 
 function deleteInvoice(string $number): bool {
+    if (!deleteInvoiceDocument($number)) {
+        return false;
+    }
+
     $stmt = getDb()->prepare('DELETE FROM invoices WHERE number = ?');
     return $stmt->execute([$number]);
+}
+
+function getDocumentsDir(): string {
+    return __DIR__ . '/documents';
+}
+
+function getInvoiceDocumentPath(string $number): string {
+    $safeNumber = preg_replace('/[^A-Za-z0-9_-]/', '', $number);
+    return getDocumentsDir() . '/' . $safeNumber . '.pdf';
+}
+
+function ensureDocumentsDir(): bool {
+    $dir = getDocumentsDir();
+    return is_dir($dir) || mkdir($dir, 0755, true);
+}
+
+function invoiceDocumentExists(string $number): bool {
+    return file_exists(getInvoiceDocumentPath($number));
+}
+
+function deleteInvoiceDocument(string $number): bool {
+    $path = getInvoiceDocumentPath($number);
+    return file_exists($path) ? unlink($path) : true;
+}
+
+function saveInvoiceDocument(string $number, array $file, array &$errors = []): bool {
+    if (!isset($file['error']) || $file['error'] === UPLOAD_ERR_NO_FILE) {
+        return true;
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $errors[] = 'Failed to upload PDF document.';
+        return false;
+    }
+
+    if (!is_uploaded_file($file['tmp_name'])) {
+        $errors[] = 'Invalid file upload.';
+        return false;
+    }
+
+    if ($file['size'] === 0) {
+        $errors[] = 'Uploaded PDF file is empty.';
+        return false;
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    if ($finfo === false) {
+        $errors[] = 'Unable to validate uploaded document.';
+        return false;
+    }
+
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+
+    if ($mimeType !== 'application/pdf') {
+        $errors[] = 'Document must be a PDF file.';
+        return false;
+    }
+
+    if (!ensureDocumentsDir()) {
+        $errors[] = 'Unable to create documents directory.';
+        return false;
+    }
+
+    $targetPath = getInvoiceDocumentPath($number);
+    $tmpPath = $targetPath . '.tmp';
+
+    if (file_exists($tmpPath)) {
+        @unlink($tmpPath);
+    }
+
+    if (!move_uploaded_file($file['tmp_name'], $tmpPath)) {
+        $errors[] = 'Could not save uploaded PDF document.';
+        return false;
+    }
+
+    if (file_exists($targetPath) && !unlink($targetPath)) {
+        @unlink($tmpPath);
+        $errors[] = 'Could not replace existing PDF document.';
+        return false;
+    }
+
+    if (!rename($tmpPath, $targetPath)) {
+        @unlink($tmpPath);
+        $errors[] = 'Could not save uploaded PDF document.';
+        return false;
+    }
+
+    return true;
 }
 
 function getInvoiceCount(string $status = 'all'): int {

@@ -26,13 +26,15 @@
             } else {
                 $result = validateInvoiceData($_POST, 'update');
                 if ($result['valid']) {
-                    updateInvoice($invoiceNumber, $result['data']);
-                    $status = rawurlencode($result['data']['status'] ?? 'all');
-                    header("Location: index.php?status={$status}");
-                    exit;
+                    $file = $_FILES['document'] ?? ['error' => UPLOAD_ERR_NO_FILE];
+                    if (saveInvoiceDocument($invoiceNumber, $file, $errors) && updateInvoice($invoiceNumber, $result['data'])) {
+                        $status = rawurlencode($result['data']['status'] ?? 'all');
+                        header("Location: index.php?status={$status}");
+                        exit;
+                    }
                 }
 
-                $errors = $result['errors'];
+                $errors = array_merge($errors, $result['errors']);
                 $old['client'] = htmlspecialchars($_POST['client'] ?? '', ENT_QUOTES, 'UTF-8');
                 $old['email'] = htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8');
                 $old['amount'] = htmlspecialchars($_POST['amount'] ?? '', ENT_QUOTES, 'UTF-8');

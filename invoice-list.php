@@ -19,15 +19,22 @@ foreach (($filteredInvoices ?? []) as $invoice): ?>
 
         ?>"><?php echo htmlspecialchars($invoice["status"], ENT_QUOTES, 'UTF-8') ?></div>
 
-        <a href="update.php?number=<?php echo $invoice["number"] ?>" id="edit_button" class="invoice_button">Edit</a>
-        <form method="post">
-            <input type="hidden" name="post_type" value="delete">
-            <input 
-                type="hidden" 
-                name="number" 
-                value="<?php echo $invoice["number"] ?>">
-            <button id="delete_button" class="invoice_button">Delete</button>
-        </form>
+        <div class="invoice_actions">
+            <?php if (invoiceDocumentExists($invoice["number"])): ?>
+                <a href="documents/<?php echo rawurlencode($invoice["number"]); ?>.pdf" target="_blank" rel="noopener" class="invoice_button">View</a>
+            <?php else: ?>
+                <span class="invoice_button invoice_button_placeholder"></span>
+            <?php endif; ?>
+            <a href="update.php?number=<?php echo $invoice["number"] ?>" id="edit_button" class="invoice_button">Edit</a>
+            <form method="post">
+                <input type="hidden" name="post_type" value="delete">
+                <input 
+                    type="hidden" 
+                    name="number" 
+                    value="<?php echo $invoice["number"] ?>">
+                <button id="delete_button" class="invoice_button">Delete</button>
+            </form>
+        </div>
         
 
     </div>

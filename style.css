@@ -144,6 +144,31 @@ button {
     font-weight: 700;
 }
 
+.invoice_actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.invoice_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0 1rem;
+    margin: 0 .5rem;
+    min-width: 5rem;
+    border-width: 1px;
+    border-radius: 10px;
+    border-style: solid;
+}
+
+.invoice_button_placeholder {
+    visibility: hidden;
+}
+
 #delete_button {
     color: white;
     background-color: red;
