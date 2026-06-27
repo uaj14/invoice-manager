@@ -22,13 +22,27 @@ function getStatusId(string $status): ?int {
     return $id === false ? null : (int) $id;
 }
 
-function getInvoices(string $status = 'all'): array {
+function getInvoices(string $status = 'all', string $sortBy = '', string $direction = 'asc'): array {
+    $allowedSorts = [
+        'number' => 'invoices.number COLLATE NOCASE',
+        'client' => 'client COLLATE NOCASE',
+        'amount' => 'amount'
+    ];
+
+    $dir = strtolower($direction) === 'desc' ? 'DESC' : 'ASC';
+    $orderSql = 'invoices.id';
+    if (isset($allowedSorts[$sortBy])) {
+        $orderSql = $allowedSorts[$sortBy] . ' ' . $dir;
+    }
+
     if ($status === 'all') {
-        $stmt = getDb()->query('SELECT invoices.number, client, email, amount, statuses.status FROM invoices JOIN statuses ON invoices.status_id = statuses.id ORDER BY invoices.id');
+        $sql = 'SELECT invoices.number, client, email, amount, statuses.status FROM invoices JOIN statuses ON invoices.status_id = statuses.id ORDER BY ' . $orderSql;
+        $stmt = getDb()->query($sql);
         return $stmt->fetchAll();
     }
 
-    $stmt = getDb()->prepare('SELECT invoices.number, client, email, amount, statuses.status FROM invoices JOIN statuses ON invoices.status_id = statuses.id WHERE statuses.status = ? ORDER BY invoices.id');
+    $sql = 'SELECT invoices.number, client, email, amount, statuses.status FROM invoices JOIN statuses ON invoices.status_id = statuses.id WHERE statuses.status = ? ORDER BY ' . $orderSql;
+    $stmt = getDb()->prepare($sql);
     $stmt->execute([$status]);
     return $stmt->fetchAll();
 }

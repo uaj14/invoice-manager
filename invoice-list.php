@@ -1,3 +1,26 @@
+<?php if (!isset($selectedStatus)) { $selectedStatus = $_GET['status'] ?? 'all'; }
+?>
+
+<?php
+$currentSort = $_GET['sort'] ?? '';
+$currentDir = (isset($_GET['dir']) && strtolower($_GET['dir']) === 'desc') ? 'desc' : 'asc';
+
+function headerLink(string $col, string $label, string $selectedStatus, string $currentSort, string $currentDir) {
+    $nextDir = ($currentSort === $col && $currentDir === 'asc') ? 'desc' : 'asc';
+    $arrow = '';
+    if ($currentSort === $col) {
+        $arrow = $currentDir === 'asc' ? ' ▲' : ' ▼';
+    }
+    return sprintf('<a href="index.php?status=%s&sort=%s&dir=%s">%s%s</a>', rawurlencode($selectedStatus), rawurlencode($col), rawurlencode($nextDir), htmlspecialchars($label, ENT_QUOTES, 'UTF-8'), $arrow);
+}
+?>
+
+<div class="invoice_header">
+    <div class="invoice_header_item"><?php echo headerLink('number', 'Number', $selectedStatus, $currentSort, $currentDir); ?></div>
+    <div class="invoice_header_item"><?php echo headerLink('client', 'Client', $selectedStatus, $currentSort, $currentDir); ?></div>
+    <div class="invoice_header_item"><?php echo headerLink('amount', 'Amount', $selectedStatus, $currentSort, $currentDir); ?></div>
+</div>
+
 <?php
 foreach (($filteredInvoices ?? []) as $invoice): ?>
     <div class="invoice">
@@ -35,7 +58,5 @@ foreach (($filteredInvoices ?? []) as $invoice): ?>
                 <button id="delete_button" class="invoice_button">Delete</button>
             </form>
         </div>
-        
-
     </div>
 <?php endforeach; ?>

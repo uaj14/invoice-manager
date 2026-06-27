@@ -5,13 +5,17 @@
 
 
 
-## 1. Beyond incorporating the invoice_manager.sqlite database, what other refactoring did you do for this part of the project?
-The invoice form in update.php and add.php was redundant as it was implemented in both pages separately. So, I refactored it so that update.php and add.php each maintain their respective functionalities, while both using the same form in invoice-form.php with `<?php require_once 'invoice-form.php'; ?>` near the end of both files. In invoice-form.php, it checks for pre-existing data (which would come from update.php), otherwise leave the inputs in the form as blank (which would be the case if a user is adding a new invoice). And update.php and add.php both set a value for $formType as "update" or "add" respectively, which determines the post type and UI elements accordingly.
 
-## 2. How well did GitHub Copilot incorporate the database into the project? What challenges did you face? What specific context or prompts did you need to use?
-It appears that it has refactored the project very well. I used the prompt `Refactor this project: instead of retrieving data from data.php, use invoice_manager.sqlite.` It maintained the functionality, and data validation and sanitization from the previous assignment. It took a long time to process as this single prompt used more monthly Co-Pilot credit than any other prompts I have used. It required permission to access Powershell multiple times in order to connect to the .sqlite file.
 
-## 3. If you were required to refactor the project to use a PostgreSQL database instead of a SQLite database including creating the tables based off the SQLite data, how would you prompt GitHub Copilot to perform this task?
-In previous semesters, I have studied MySQL instead of PostgresSQL, so I will refer to MySQL. I am assuming that MySQL and related software are already installed on the PC.
+## 1. What new feature did you incorporate into the Invoice Manager application? What other changes would you make to the project? Explain why.
+Other than the .PDF file uploading feature, I implemented a sorting feature for each of the columns. Above the list of invoices, there is a header with clickable "Number", "Client", and "Amount. Clicking one of the items once will sort the corresponding items in ascending order (alphabetically or by amount), and clicking the same item again will sort the corresponding items in descending order. The sorted list is not preserved when clicking on a different status filter in the navigation bar.
 
-I would prompt the AI to generate MySQL commands that would generate an equivalent table in MySQL. Then, I would copy and paste the MySQL commands into MySQL Workbench to create a new database and table with the same data as invoice_manager.sqlite. Then I would prompt it to change the PHP codebase to refactor all connections to invoice_manager.sqlite to the equivalent MySQL database--more or less using it to "search and replace" the outdated code.
+## 2. How did your use of GitHub Copilot change throughout the project? Are you more likely or less likely to use GitHub Copilot or any GenAI for coding assistance in the future? Explain why.
+In earlier projects, I used it more as an advisory tool that explained various PHP concepts as well as generating code that would be easy but monotonous to implement. But eventually I used it for implementing entire features. It was rather effective.
+
+Would I use such tools in the future? I wonder whether the answer is yes regardless of whether I like using it. The great advantage of coding everything manually is that everything was done with intention, and so you inherently understand the details of what the code is doing. It is true that using AI generates the code quickly, and you can know what the code is doing by reviewing it line-by-line what it is doing. But it strikes me that some learning and creative process is lost when using AI, as convenient as it may be.
+
+I think not much is lost if AI is used to generate code or scripts that are simple but monotonous, whereas more is lost and may potentially lead to problems in the long term if it is used to implement major features with many interdependencies.
+
+## 3. What have you learned from completing the Invoice Manager application? How will those skills help you in the future?
+

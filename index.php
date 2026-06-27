@@ -24,7 +24,9 @@
             $selectedStatus = 'all';
         }
 
-        $filteredInvoices = getInvoices($selectedStatus);
+        $currentSort = $_GET['sort'] ?? '';
+        $currentDir = (isset($_GET['dir']) && strtolower($_GET['dir']) === 'desc') ? 'desc' : 'asc';
+        $filteredInvoices = getInvoices($selectedStatus, $currentSort, $currentDir);
 
         renderNav($selectedStatus);
         require_once 'invoice-list.php';
